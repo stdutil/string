@@ -2,18 +2,26 @@ package string
 
 import "strings"
 
-type String string
+type String struct{}
 
-func (s *String) StripEndingForwardSlash() string {
-	return StripEndingForwardSlash(string(*s))
+// StripEndingForwardSlash removes the ending forward slash of a string
+func (s *String) StripEndingForwardSlash(value string) string {
+	return StripEndingForwardSlash(value)
 }
 
-func (s *String) StripLeading(offset int) string {
-	return StripLeading(string(*s), offset)
+// StripLeading strips string of leading characters by an offset
+func (s *String) StripLeading(value string, offset int) string {
+	return StripLeading(value, offset)
 }
 
-func (s *String) StripTrailing(length int) string {
-	return StripTrailing(string(*s), length)
+// StripTrailing strips string of trailing characters after the length
+func (s *String) StripTrailing(value string, length int) string {
+	return StripTrailing(value, length)
+}
+
+// ToByte converts string or strings to byte array with an option for a separator
+func (s *String) ToByte(sep string, elems ...string) []byte {
+	return StringToByte(sep, elems...)
 }
 
 // StringToByte converts string or strings to byte array with an option for a separator
