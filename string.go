@@ -35,3 +35,22 @@ func StripTrailing(value string, length int) string {
 	}
 	return value
 }
+
+// GetSides returns the start and end of the string value specified by length and join them together
+//
+// If the length of the value cannot leave a middle string, it will return the supplied value
+func GetSides(value string, length int) string {
+	if value == "" || length < 1 {
+		return value
+	}
+	vlen := len(value)
+	if length > vlen {
+		return value
+	}
+	if length != 1 && vlen%length == 0 {
+		return value
+	}
+	left := value[0:length]
+	rght := value[vlen-length:]
+	return left + rght
+}
