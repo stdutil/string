@@ -1,6 +1,9 @@
 package string
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 // StringToByte converts string or strings to byte array with an option for a separator
 func StringToByte(sep string, elems ...string) []byte {
@@ -53,4 +56,19 @@ func GetSides(value string, length int) string {
 	left := value[0:length]
 	rght := value[vlen-length:]
 	return left + rght
+}
+
+// NominateFileName returns a new file name based on the iteration
+//
+// If filename has no extension, the function will simply append the iteration number at the end
+// If filename has an extension, it will insert the iteration number before the extension
+func NominateFileName(origFN string, iteration int) string {
+	extPos := strings.LastIndex(origFN, ".")
+	if extPos == -1 {
+		return fmt.Sprintf("%s [%d]", origFN, iteration)
+	}
+
+	ext := origFN[extPos:]
+	bfn := origFN[:extPos]
+	return fmt.Sprintf("%s_[%d]%s", bfn, iteration, ext)
 }
