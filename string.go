@@ -2,6 +2,7 @@ package string
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -58,17 +59,36 @@ func GetSides(value string, length int) string {
 	return left + rght
 }
 
-// NominateFileName returns a new file name based on the iteration
-//
-// If filename has no extension, the function will simply append the iteration number at the end
-// If filename has an extension, it will insert the iteration number before the extension
-func NominateFileName(origFN string, iteration int) string {
+// NominateFileName returns a new file name by appending a number
+func NominateFileName(origFN string) string {
+	var (
+		bfn, ext string
+		num      int64
+		err      error
+	)
+
+	bfn = origFN
+
+	// Check for a file extension
 	extPos := strings.LastIndex(origFN, ".")
-	if extPos == -1 {
-		return fmt.Sprintf("%s [%d]", origFN, iteration)
+	if extPos != -1 && extPos > 0 {
+		bfn = origFN[:extPos]
+		ext = origFN[extPos:]
 	}
 
-	ext := origFN[extPos:]
-	bfn := origFN[:extPos]
-	return fmt.Sprintf("%s_[%d]%s", bfn, iteration, ext)
+	// Check for a number inside a parenthesis
+	// This will indicate that this is a redundancy of the file
+	if prp := strings.LastIndex(bfn, ")"); prp != -1 {
+		sblp := bfn[0:prp]
+		if plp := strings.LastIndex(sblp, "("); plp != -1 {
+			if rem := sblp[plp+1:]; rem != "" {
+				num, err = strconv.ParseInt(rem, 10, 64)
+				if err == nil {
+					bfn = sblp[0:plp]
+				}
+			}
+		}
+	}
+	bfn = strings.TrimSpace(bfn)
+	return fmt.Sprintf("%s (%d)%s", bfn, num+1, ext)
 }
